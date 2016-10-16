@@ -60,8 +60,9 @@ module Proxy::Salt::CLI
     def state_apply(host, opts = {})
       find_salt_binaries
       states = opts.delete("states")
+      test = opts.delete("test")
       args = opts.map { |k,v| "#{k}=#{v}" }
-      cmd = [@sudo, '-u', Proxy::Salt::Plugin.settings.salt_command_user, @salt, '--async', escape_for_shell(host), 'state.apply', args.join(' '), states.join(', ')]
+      cmd = [@sudo, '-u', Proxy::Salt::Plugin.settings.salt_command_user, @salt, '--async', escape_for_shell(host), 'state.apply', args.join(' '), states.join(', '), *("test" if test)]
       logger.info "Will run state.highstate for #{host}. Full command: #{cmd.join(' ')}"
       shell_command(cmd)
     end
